@@ -9,7 +9,7 @@ const action = {
 // This function returns 'increment' action. \\ remember actions are objects.
 function increment() {
     return {
-        type: 'DECREMENT'
+        type: 'INCREMENT'
     }
 }
 
@@ -35,7 +35,7 @@ function reducer(state = {count: 0}, action) {
 */
 
 // using a switch statement for the reducer
-function reducerSwitch(state = {count: 0}, action) {
+function reducerSwitch(state = {count: 1}, action) {
     switch(action.type) {
         case ("INCREMENT") : //increment state to increase the count state if the action type is Increment.
             return {
@@ -53,6 +53,14 @@ function reducerSwitch(state = {count: 0}, action) {
 // creating Redux Store. Takes the reducer as parameter.
 const store = Redux.createStore(reducerSwitch)
 console.log(store)
+
+// runs anytime an action is dispatched. i.e a state changes.
+store.subscribe(() => {
+    console.log(store.getState()) // calling getState to see the current state after change.
+})
+
+// sending the increment action to the reducer
+store.dispatch(increment())
 
 
 
