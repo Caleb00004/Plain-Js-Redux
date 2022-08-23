@@ -75,14 +75,48 @@ function changeCount(number) {
 
 function addTask(task) {
     return {
-        type: "ADD_THING",
+        type: "ADD_TASK",
         addWhat: task
+    }
+}
+
+function removeTask(task) {
+    return {
+        type: "REMOVE_TASK",
+        removeWhat: task
+    }
+}
+
+function addTitle (title) {
+    return {
+        type: "ADD_TITLE",
+        title: title
+    }
+}
+
+function upVote() {
+    return {
+        type: "UP_VOTE",
+    }
+}
+
+function downVote() {
+    return {
+        type: "DOWN_VOTE",
     }
 }
 
 const initalState = {
     count : 0,
-    myTask : []
+    myTask : [],
+    youtubeVideo: {
+        title: "",
+        vidName: "",
+        votes: {
+            up: 0,
+            down: 0
+        }
+    }
 }
 
 // New Reducer for the changeCount action.
@@ -93,11 +127,40 @@ function newReducer(state = initalState, action) {
                 ...state,
                 count: state.count + action.payLoad
             }
-        case ("ADD_THING") :
+        case ("ADD_TASK") :
             return {
                 ...state,
                 myTask : [ ...state.myTask, action.addWhat ]
             }
+        case ("REMOVE_TASK"):
+            const updatedArray = state.myTask.filter(word => word !== action.removeWhat)
+            return {
+                ...state,
+                myTask: updatedArray
+            }
+        case ("ADD_TITLE"):
+            return {
+                ...state,
+                youtubeVideo: {...state.youtubeVideo, title: action.title }
+            }
+        case ("UP_VOTE"): { // the extra curly brackets here is to make it possible to use the same variable names in different cases. i.e all variable names inside this case will be unique to this case alone. 
+            const youtubeVideo = state.youtubeVideo
+            const votes = state.youtubeVideo.votes
+
+            return {    
+                ...state,
+                youtubeVideo: {...youtubeVideo, votes: {...votes, up: votes.up + 1}}
+            }
+        }
+        case ("DOWN_VOTE") : 
+            const youtubeVideo = state.youtubeVideo
+            const votes = state.youtubeVideo.votes
+
+            return {    
+                ...state,
+                youtubeVideo: {...youtubeVideo, votes: {...votes, down: votes.down + 1}}
+            }
+
         default : //default case to just return previous state if an action dose'nt exist or non of the action in cases matches.
             return state
     }
@@ -117,6 +180,11 @@ store.subscribe(() => {
 store.dispatch(changeCount(-5))
 store.dispatch(addTask('mikael'))
 store.dispatch(addTask('jackson'))
+store.dispatch(removeTask('mikael'))
+store.dispatch(addTitle('first youtubeVideo'))
+store.dispatch(upVote())
+store.dispatch(upVote())
+store.dispatch(downVote())
 //store.dispatch(decrement())
 
 
