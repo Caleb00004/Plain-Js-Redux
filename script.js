@@ -73,13 +73,33 @@ function changeCount(number) {
     }
 }
 
+function addTask(task) {
+    return {
+        type: "ADD_THING",
+        addWhat: task
+    }
+}
+
+const initalState = {
+    count : 0,
+    myTask : []
+}
+
 // New Reducer for the changeCount action.
-function newReducer(state = {count : 0}, action) {
+function newReducer(state = initalState, action) {
     switch (action.type) {
         case ("CHANGE_COUNT") :
             return {
+                ...state,
                 count: state.count + action.payLoad
             }
+        case ("ADD_THING") :
+            return {
+                ...state,
+                myTask : [ ...state.myTask, action.addWhat ]
+            }
+        default : //default case to just return previous state if an action dose'nt exist or non of the action in cases matches.
+            return state
     }
 }
 
@@ -95,7 +115,8 @@ store.subscribe(() => {
 
 // sending the actions to the reducer
 store.dispatch(changeCount(-5))
-
+store.dispatch(addTask('mikael'))
+store.dispatch(addTask('jackson'))
 //store.dispatch(decrement())
 
 
